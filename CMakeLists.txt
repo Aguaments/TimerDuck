@@ -7,13 +7,13 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 set(CMAKE_EXE_LINKER_FLAGS "-static")
 
-include_directories(${PROJECT_SOURCE_DIR}/utils/)
-include_directories(${PROJECT_SOURCE_DIR}/timer)
-include_directories(${PROJECT_SOURCE_DIR}/bgm)
+include_directories(${PROJECT_SOURCE_DIR}/src/utils/)
+include_directories(${PROJECT_SOURCE_DIR}/src/timer)
+include_directories(${PROJECT_SOURCE_DIR}/src/bgm)
 
-aux_source_directory(${PROJECT_SOURCE_DIR}/timer SRC_TIMER)
-aux_source_directory(${PROJECT_SOURCE_DIR}/utils SRC_UTILS)
-aux_source_directory(${PROJECT_SOURCE_DIR}/bgm SRC_BGM)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src/timer SRC_TIMER)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src/utils SRC_UTILS)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src/bgm SRC_BGM)
 
 add_executable(Timer
         main.cpp

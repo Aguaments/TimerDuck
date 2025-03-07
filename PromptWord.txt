@@ -13,3 +13,174 @@
 2. 该程序在运行之后，以用户设定的自定义图片展示
 3. 该图片在桌面上可以随意拖动
 4. 点击该图片会在图片四周显示如下功能：设定闹钟、休闲小游戏等
+#include <windows.h>
+#include <gdiplus.h>
+#include <string>
+
+#pragma comment(lib, "gdiplus.lib")
+
+using namespace Gdiplus;
+
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+// 全局变量
+HBITMAP hBitmap = nullptr;
+HWND hAlarmButton, hGameButton;
+POINT lastMousePos;
+bool isDragging = false;
+
+// 选择图片
+std::wstring SelectImageFile() {
+    OPENFILENAME ofn = { 0 };
+    WCHAR szFile[MAX_PATH] = { 0 };
+
+    ofn.lStructSize = sizeof(ofn);
+    ofn.hwndOwner = nullptr;
+    ofn.lpstrFilter = L"Image Files\0*.bmp;*.jpg;*.png\0All Files\0*.*\0";
+    ofn.lpstrFile = szFile;
+    ofn.nMaxFile = MAX_PATH;
+    ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
+
+    if (GetOpenFileName(&ofn)) {
+        return szFile;
+    }
+    return L"";
+}
+
+// 加载图片
+HBITMAP LoadImageFromFile(std::wstring imagePath) {
+    Gdiplus::Bitmap* bitmap = Gdiplus::Bitmap::FromFile(imagePath.c_str());
+    if (!bitmap) return nullptr;
+
+    HBITMAP hBmp;
+    bitmap->GetHBITMAP(NULL, &hBmp);
+    delete bitmap;
+    return hBmp;
+}
+
+// 绘制窗口
+void PaintWindow(HWND hWnd, HDC hdc) {
+    if (!hBitmap) return;
+
+    HDC hMemDC = CreateCompatibleDC(hdc);
+    SelectObject(hMemDC, hBitmap);
+
+    BITMAP bmp;
+    GetObject(hBitmap, sizeof(BITMAP), &bmp);
+
+    // 绘制图片
+    BitBlt(hdc, 0, 0, bmp.bmWidth, bmp.bmHeight, hMemDC, 0, 0, SRCCOPY);
+
+    DeleteDC(hMemDC);
+}
+
+// 创建功能按钮
+void CreateFunctionButtons(HWND hWnd) {
+    if (!hAlarmButton) {
+        hAlarmButton = CreateWindow(L"BUTTON", L"设定闹钟", WS_VISIBLE | WS_CHILD,
+            10, 150, 100, 30, hWnd, (HMENU)1, NULL, NULL);
+    }
+    if (!hGameButton) {
+        hGameButton = CreateWindow(L"BUTTON", L"小游戏", WS_VISIBLE | WS_CHILD,
+            120, 150, 100, 30, hWnd, (HMENU)2, NULL, NULL);
+    }
+}
+
+// 窗口回调函数
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+    switch (message) {
+    case WM_PAINT:
+    {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hWnd, &ps);
+        PaintWindow(hWnd, hdc);
+        EndPaint(hWnd, &ps);
+        break;
+    }
+    case WM_LBUTTONDOWN:
+        isDragging = true;
+        lastMousePos = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+        SetCapture(hWnd);
+        break;
+
+    case WM_MOUSEMOVE:
+        if (isDragging) {
+            POINT currentPos = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+            RECT rect;
+            GetWindowRect(hWnd, &rect);
+            int dx = currentPos.x - lastMousePos.x;
+            int dy = currentPos.y - lastMousePos.y;
+            MoveWindow(hWnd, rect.left + dx, rect.top + dy, rect.right - rect.left, rect.bottom - rect.top, TRUE);
+        }
+        break;
+
+    case WM_LBUTTONUP:
+        isDragging = false;
+        ReleaseCapture();
+        break;
+
+    case WM_LBUTTONDBLCLK:
+        CreateFunctionButtons(hWnd);
+        break;
+
+    case WM_COMMAND:
+        switch (LOWORD(wParam)) {
+        case 1:
+            MessageBox(hWnd, L"闹钟功能开发中...", L"提示", MB_OK);
+            break;
+        case 2:
+            MessageBox(hWnd, L"小游戏功能开发中...", L"提示", MB_OK);
+            break;
+        }
+        break;
+
+    case WM_DESTROY:
+        DeleteObject(hBitmap);
+        PostQuitMessage(0);
+        break;
+
+    default:
+        return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+    return 0;
+}
+
+// WinMain 入口
+int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow) {
+    GdiplusStartupInput gdiplusStartupInput;
+    ULONG_PTR gdiplusToken;
+    GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+
+    WNDCLASS wc = { 0 };
+    wc.lpfnWndProc = WndProc;
+    wc.hInstance = hInstance;
+    wc.lpszClassName = L"ImageWindow";
+    RegisterClass(&wc);
+
+    // 选择用户的图片
+    std::wstring imagePath = SelectImageFile();
+    if (imagePath.empty()) return 0;
+
+    hBitmap = LoadImageFromFile(imagePath);
+    if (!hBitmap) return 0;
+
+    BITMAP bmp;
+    GetObject(hBitmap, sizeof(BITMAP), &bmp);
+
+    HWND hWnd = CreateWindowEx(WS_EX_LAYERED, L"ImageWindow", L"桌面图片", WS_POPUP | WS_VISIBLE,
+        100, 100, bmp.bmWidth, bmp.bmHeight, NULL, NULL, hInstance, NULL);
+
+    if (!hWnd) return 0;
+
+    // 让窗口支持透明拖动
+    SetLayeredWindowAttributes(hWnd, 0, 255, LWA_ALPHA);
+
+    MSG msg;
+    while (GetMessage(&msg, NULL, 0, 0)) {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    GdiplusShutdown(gdiplusToken);
+    return (int)msg.wParam;
+}

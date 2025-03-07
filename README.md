@@ -14,5 +14,5 @@ Deaktop timer with a duck image.
   - **Click**
     - <font color="#118811">Different click times while display different action of the duck</font>
     - <font color="#661188"><strong>Action 1: </strong>shake ass</font>
-    - <font color="#661188"><strong>Action 1: </strong>angry(touch many times)</font>
-    - <font color="#661188"><strong>Action 1: </strong>cry(over two hours)</font>
+    - <font color="#661188"><strong>Action 2: </strong>angry(touch many times)</font>
+    - <font color="#661188"><strong>Action 3: </strong>cry(over two hours)</font>

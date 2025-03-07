@@ -1,0 +1,2 @@
+# TimerDuck
+Deaktop timer

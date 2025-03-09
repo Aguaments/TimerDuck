@@ -1,11 +1,14 @@
 #ifndef MUSIC_H
 #define MUSIC_H
-#include <iostream>
+#include <string>
 
 namespace ducktimer{
-    void play(){
-        std::cout << "play" << std::endl;
-    }
-};
-
+    class music{
+    public:
+        music(std::string fname):filename(fname){};
+        void play() const;
+    private:
+        std::string filename;
+    };
+}
 #endif

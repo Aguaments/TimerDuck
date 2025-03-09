@@ -2,7 +2,6 @@
 #include <iostream>
 #include <thread>
 #include "tools.h"
-#include "music.h"
 
 namespace ducktimer {
     void timer::run() const {

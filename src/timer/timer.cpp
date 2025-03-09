@@ -70,8 +70,8 @@ namespace ducktimer {
             char ans = 'Y';
             setDuration();
             startDuration();
-            std::thread t1(play, filepath);
-            t1.detach();
+            // std::thread t1(play);
+            // t1.detach();
             std::cout << "Continue? (Y/N, Default Y) " ;
             std::cin >> ans;
             if(ans == 'N') {

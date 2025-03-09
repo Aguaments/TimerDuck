@@ -16,3 +16,4 @@ namespace ducktimer {
         std::string filepath;
     };
 }
+#endif

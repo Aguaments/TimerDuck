@@ -78,8 +78,8 @@ namespace ducktimer {
             char ans = 'Y';
             setDuration();
             startDuration();
-            // std::thread t1([this](){this -> m.playmusic();});
-            // t1.detach();
+            std::thread t1([this](){this -> m.playmusic();});
+            t1.detach();
             std::cout << "Continue? (Y/N, Default Y) " ;
             std::cin >> ans;
             if(ans == 'N') {

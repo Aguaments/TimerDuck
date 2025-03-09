@@ -5,7 +5,7 @@
 namespace ducktimer{
     class music{
     public:
-        music(std::string fname):filename(fname){};
+        explicit music(std::string fname):filename(fname){};
         void play() const;
     private:
         std::string filename;

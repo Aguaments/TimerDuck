@@ -1,5 +1,3 @@
-#ifndef TOOLS_H
-#define TOOLS_H
 #define BUFFER_SIZE 4096
 
 namespace ducktimer {
@@ -12,5 +10,3 @@ namespace ducktimer {
         static char obuffer[BUFFER_SIZE];
     };
 }
-
-#endif //TOOLS_H

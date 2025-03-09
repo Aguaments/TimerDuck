@@ -1,11 +1,12 @@
 #ifndef TIMER_H
 #define TIMER_H
 #include <string>
+#include "music.h"
 
 namespace ducktimer {
     class timer {
     public:
-        explicit timer(int dur):duration(dur), filepath("./bgm.mp3"){};
+        explicit timer(int dur, std::string fname):duration(dur), m(fname){};
         void run() const;
     private:
         void panel() const;
@@ -13,7 +14,7 @@ namespace ducktimer {
         void startDuration() const;
         void startTimer() const;
         int mutable duration;
-        std::string filepath;
+        music m;
     };
 }
 #endif

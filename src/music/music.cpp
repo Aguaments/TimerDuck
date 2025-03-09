@@ -1,36 +1,21 @@
 #include "music.h"
+#include <iostream>
 #include <windows.h>
-#include <dshow.h>
-#pragma comment(lib, "strmiids.lib")
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
+
 
 namespace ducktimer{
-    void music::play() const{
-        CoInitialize(nullptr);
-    
-        IGraphBuilder* pGraph = nullptr;
-        IMediaControl* pControl = nullptr;
-        IMediaEvent* pEvent = nullptr;
-    
-        // 创建 Filter Graph
-        CoCreateInstance(CLSID_FilterGraph, nullptr, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void**)&pGraph);
-        pGraph->QueryInterface(IID_IMediaControl, (void**)&pControl);
-        pGraph->QueryInterface(IID_IMediaEvent, (void**)&pEvent);
-    
-        // 加载 MP3 文件
-        pGraph->RenderFile(filename, nullptr);
-    
-        // 开始播放
-        pControl->Run();
-    
-        // 等待播放结束
-        long evCode;
-        pEvent->WaitForCompletion(INFINITE, &evCode);
-    
-        // 释放资源
-        pControl->Release();
-        pEvent->Release();
-        pGraph->Release();
-        CoUninitialize();
-    
+    void music::playmusic() const{
+        std::string command = "open \"" + filename +"\" type mpegvideo alias mp3" ;
+        mciSendString(command.c_str(), NULL, 0, NULL);
+        // 播放
+        mciSendString("play mp3", NULL, 0, NULL);
+        
+        // 等待用户输入
+        system("pause");
+
+        // 关闭 MP3
+        mciSendString("close mp3", NULL, 0, NULL);
     }
-};
+}

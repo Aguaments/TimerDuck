@@ -1,7 +1,8 @@
 #include "timer.h"
 #include <iostream>
 #include <thread>
-#include "tools.h"
+#include "utils.h"
+
 
 namespace ducktimer {
     void timer::run() const {
@@ -21,32 +22,40 @@ namespace ducktimer {
     void timer::setDuration() const {
         do {
             std::cout << "Please tell me the time duration you choose(Don't set the time duration less than 1): ";
-            std::cin >> duration;
-            if(duration < 1) {
-                std::string msg = "OH DAMN! You guys plan to break the system? Set a correct time duration!!!";
-                std::cout << msg;
-                std::this_thread::sleep_for(std::chrono::seconds(2));
-                tools::clearCurrentLine(static_cast<int>(msg.length()));
-            }else if(duration == 30) {
-                char ans = 'Y';
-                std::string msg = "(> _ <)^ ! You don't modify the time duration...(Default time duration 30 minutes)";
-                std::cout << msg << std::endl;
-                std::cout << "To reset? (Y/N, Default Y) " ;
-                std::cin >> ans;
-                if(ans == 'N') {
+            
+            if((std::cin >> duration).good()){
+                // do something
+                if(duration < 1) {
+                    std::string msg = "OH DAMN! You guys plan to break the system? Set a correct time duration!!!";
+                    std::cout << msg;
+                    std::this_thread::sleep_for(std::chrono::seconds(2));
+                    tools::clearCurrentLine(static_cast<int>(msg.length()));
+                }else if(duration == 30) {
+                    char ans = 'Y';
+                    std::string msg = "(> _ <)^ ! You don't modify the time duration...(Default time duration 30 minutes)";
+                    std::cout << msg << std::endl;
+                    tools::clearCurrentLine(msg.length());
+                    std::cout << "To reset? (Y/N, Default Y) " ;
+                    std::cin >> ans;
+                    if(ans == 'N') {
+                        std::cout << "Set success." << std::endl;
+                        break;
+                    }
+                    if(ans == 'Y') continue;
+                    {
+                        std::cout << "/(= _ =)\\ DAMN! You are a bad guy." << std::endl;
+                        exit(1);
+                    }
+                }else if(duration >= 1){
                     std::cout << "Set success." << std::endl;
                     break;
-                }
-                if(ans == 'Y') continue;
-                {
+                }else {
                     std::cout << "/(= _ =)\\ DAMN! You are a bad guy." << std::endl;
                     exit(1);
                 }
-            }else if(duration >= 1){
-                std::cout << "Set success." << std::endl;
-                break;
-            }else {
-                std::cout << "/(= _ =)\\ DAMN! You are a bad guy." << std::endl;
+            }
+            else{
+                std::cout << "System error." << std::endl;
                 exit(1);
             }
         }while(true);
@@ -69,7 +78,7 @@ namespace ducktimer {
             char ans = 'Y';
             setDuration();
             startDuration();
-            // std::thread t1(play);
+            // std::thread t1([this](){this -> m.playmusic();});
             // t1.detach();
             std::cout << "Continue? (Y/N, Default Y) " ;
             std::cin >> ans;
@@ -79,9 +88,10 @@ namespace ducktimer {
             }
             if(ans == 'Y') continue;
             {
-                std::cout << "/(= _ =)\\ DAMN! You are a bad guy." << std::endl;
-                exit(1);
+                continue;
             }
+            std::cout << "Bad guy." << std::endl;
+            exit(1);
         }while(true);
     }
 }

@@ -65,19 +65,18 @@ namespace ducktimer {
             std::cout << " || Total elapsed time : " << t + 1 << ")" << std::endl;
             t ++;
         }while(t < m_duration);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
 
     void timer::startTimer() const {
         do {
             setDuration();
             startDuration();
-            std::thread t1([this](){this -> m_music.run();});
-            t1.join();
+            m_music.run();
             std::cout << "Continue? " ;
             if(utils::getInstance().isYOrN()) continue;
             std::cout << MSG_SAY_GOODBYE << std::endl;
             utils::getInstance().clearCurrentLine(strlen(MSG_SAY_GOODBYE));
-            exit(1);
         }while(true);
     }
 }

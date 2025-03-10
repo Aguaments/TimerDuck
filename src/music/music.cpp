@@ -32,6 +32,7 @@ namespace ducktimer{
         MCIERROR err = mciSendString(command.c_str(), NULL, 0, NULL);
 
         if (err != 0) {
+            // 补充错误处理
             std::cerr << "Failed to open MP3, error code: " << err << std::endl;
             exit(1);
         }
@@ -45,6 +46,7 @@ namespace ducktimer{
     }
 
     void music::run() const{
+        running = true;
         std::thread t1(&music::playMusic, this);
         std::thread t2(&music::mointerKeyboard, this);
 

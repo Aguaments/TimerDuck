@@ -59,11 +59,11 @@ namespace ducktimer {
         char ans = 'Y'; // Default setting
         std::cout << "Choose Y or N(Yes/No, Default Y) " ;
         if((std::cin >> ans).good()){
-            if(ans == 'N' || ans == 'n') {
+            if(ans == 'Y' || ans == 'y') {
                 std::cout << "Set success." << std::endl;
                 ret = 1;
             }
-            else if(ans == 'Y' || ans == 'y'){
+            else if(ans == 'N' || ans == 'n'){
                 std::cout << "Set fail, you choose no.";
             }
             else{

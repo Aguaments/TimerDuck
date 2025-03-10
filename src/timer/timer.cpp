@@ -23,18 +23,18 @@ namespace ducktimer {
         do {
             std::cout << "Please tell me the time duration you choose(Don't set the time duration less than 1): ";
             
-            if((std::cin >> duration).good()){
+            if((std::cin >> m_duration).good()){
                 // do something
-                if(duration < 1) {
+                if(m_duration < 1) {
                     std::string msg = "OH DAMN! You guys plan to break the system? Set a correct time duration!!!";
                     std::cout << msg;
                     std::this_thread::sleep_for(std::chrono::seconds(2));
-                    tools::clearCurrentLine(static_cast<int>(msg.length()));
-                }else if(duration == 30) {
+                    utils::clearCurrentLine(static_cast<int>(msg.length()));
+                }else if(m_duration == 30) {
                     char ans = 'Y';
                     std::string msg = "(> _ <)^ ! You don't modify the time duration...(Default time duration 30 minutes)";
                     std::cout << msg << std::endl;
-                    tools::clearCurrentLine(msg.length());
+                    utils::clearCurrentLine(msg.length());
                     std::cout << "To reset? (Y/N, Default Y) " ;
                     std::cin >> ans;
                     if(ans == 'N') {
@@ -46,7 +46,7 @@ namespace ducktimer {
                         std::cout << "/(= _ =)\\ DAMN! You are a bad guy." << std::endl;
                         exit(1);
                     }
-                }else if(duration >= 1){
+                }else if(m_duration >= 1){
                     std::cout << "Set success." << std::endl;
                     break;
                 }else {
@@ -63,14 +63,14 @@ namespace ducktimer {
 
     void timer::startDuration() const{
         int t = 0;
-        std::cout << "Timer started ... (Target: " << duration << " minutes)" << std::endl;
+        std::cout << "Timer started ... (Target: " << m_duration << " minutes)" << std::endl;
         do {
             std::this_thread::sleep_for(std::chrono::minutes(1));
             std::cout << "[Min: " << t + 1 << "] "<< t + 1 << " minute elapsed ... ";
-            std::cout << "(Set time duration: " << duration ;
+            std::cout << "(Set time duration: " << m_duration ;
             std::cout << " || Total elapsed time : " << t + 1 << ")" << std::endl;
             t ++;
-        }while(t < duration);
+        }while(t < m_duration);
     }
 
     void timer::startTimer() const {
@@ -78,7 +78,7 @@ namespace ducktimer {
             char ans = 'Y';
             setDuration();
             startDuration();
-            std::thread t1([this](){this -> m.playmusic();});
+            std::thread t1([this](){this -> m_music.playmusic();});
             t1.detach();
             std::cout << "Continue? (Y/N, Default Y) " ;
             std::cin >> ans;

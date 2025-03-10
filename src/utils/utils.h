@@ -1,12 +1,22 @@
-#define BUFFER_SIZE 4096
+#include <memory>
+#include <mutex>
 
 namespace ducktimer {
-    class tools {
+    class utils {
     public:
+        static utils& getInstance();
         static void clearCurrentLine(int len);
-        static void setIONewBuffer();
+        static void printPoint();
+        static void setPointNums(const int& nums);
     private:
-        static char ibuffer[BUFFER_SIZE];
-        static char obuffer[BUFFER_SIZE];
+        static std::unique_ptr<utils> instance; // 智能指针只是用于对象的管理
+        static std::mutex mtx;
+        static int m_point_num;
+
+    private:
+        utils() = default;
+        utils(const utils&) = delete;
+        utils& operator=(const utils &)  = delete;
+        ~utils() = default;
     };
 }

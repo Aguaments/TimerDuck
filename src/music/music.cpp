@@ -12,7 +12,7 @@
 
 namespace ducktimer{
 
-    std::atomic<bool> music::running = false;
+    std::atomic<bool> music::running = true;
 
     void music::mointerKeyboard() const {
         while(running) {
@@ -39,19 +39,19 @@ namespace ducktimer{
         mciSendString("play mp3", NULL, 0, NULL);
         std::cout << "Playing this music (Input any key to close the music) -- [ Music: " << filename  << " ] " ;
         while(running) {
-            utils::printPoint();
+            utils::getInstance().printPoint();
         }
         mciSendString("close mp3", NULL, 0, NULL);
     }
 
     void music::run() const{
-        std::thread t1(playMusic);
-        std::thread t2(mointerKeyboard);
+        std::thread t1(&music::playMusic, this);
+        std::thread t2(&music::mointerKeyboard, this);
 
         t1.join();
         t2.join();
         std::cout << std::endl;
-        std::cout <<"stop" <<std::endl;
+        std::cout <<"Music stop." <<std::endl;
         std::cin.get();
     }
 }

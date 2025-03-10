@@ -1,7 +1,9 @@
 #include "timer.h"
 #include <iostream>
 #include <thread>
+#include <iomanip>
 #include "utils.h"
+#include "msgconstant.h"
 
 
 namespace ducktimer {
@@ -20,43 +22,35 @@ namespace ducktimer {
     }
 
     void timer::setDuration() const {
-        do {
-            std::cout << "Please tell me the time duration you choose(Don't set the time duration less than 1): ";
-            
-            if((std::cin >> m_duration).good()){
-                // do something
+        start: do {
+            std::cout << MSG_SET_DURATION;
+            if((std::cin >> m_duration).good()){ // 输入没问题
+                // 检测输入的duration是否合规，精度为minutes
                 if(m_duration < 1) {
-                    std::string msg = "OH DAMN! You guys plan to break the system? Set a correct time duration!!!";
-                    std::cout << msg;
-                    std::this_thread::sleep_for(std::chrono::seconds(2));
-                    utils::clearCurrentLine(static_cast<int>(msg.length()));
-                }else if(m_duration == 30) {
-                    char ans = 'Y';
-                    std::string msg = "(> _ <)^ ! You don't modify the time duration...(Default time duration 30 minutes)";
-                    std::cout << msg << std::endl;
-                    utils::clearCurrentLine(msg.length());
-                    std::cout << "To reset? (Y/N, Default Y) " ;
-                    std::cin >> ans;
-                    if(ans == 'N') {
-                        std::cout << "Set success." << std::endl;
-                        break;
+                    std::cout << MSG_SET_DURATION_LESS_THAN_1;
+                    utils::getInstance().clearCurrentLine(strlen(MSG_SET_DURATION_LESS_THAN_1));
+                }
+                else{
+                    if(m_duration == 30) {
+                        std::cout << MSG_SET_DURATION_EQUAL_TO_30 << std::endl;
+                        // strlen返回字符串长度，不包含'\0'，清空命令行时长度不需要+1 
+                        utils::getInstance().clearCurrentLine(strlen(MSG_SET_DURATION_EQUAL_TO_30)); 
+                        // 只要是选择Y/N的都走这个函数
+                        if(!utils::getInstance().isYOrN()) continue;
                     }
-                    if(ans == 'Y') continue;
-                    {
-                        std::cout << "/(= _ =)\\ DAMN! You are a bad guy." << std::endl;
-                        exit(1);
-                    }
-                }else if(m_duration >= 1){
-                    std::cout << "Set success." << std::endl;
-                    break;
-                }else {
-                    std::cout << "/(= _ =)\\ DAMN! You are a bad guy." << std::endl;
-                    exit(1);
+                    std::cout << MSG_SET_SUCCESS << std::endl;
+                    break; // 跳出大循环
                 }
             }
-            else{
-                std::cout << "System error." << std::endl;
-                exit(1);
+            else{ // 输入出现问题
+                // 后期构建日志模块重写
+                std::cin.clear();
+                // 忽略输入流中的剩余部分，直到遇到换行符
+                std::cin.ignore();
+                auto curr_time = std::chrono::system_clock::now();
+                std::time_t now_time = std::chrono::system_clock::to_time_t(curr_time);
+                std::tm * local_time = std::localtime(&now_time);
+                std::cerr << "[" << std::put_time(local_time, "%Y-%m-%d %H:%M:%S") << "] Input content error." << std::endl;
             }
         }while(true);
     }
@@ -75,22 +69,14 @@ namespace ducktimer {
 
     void timer::startTimer() const {
         do {
-            char ans = 'Y';
             setDuration();
             startDuration();
-            std::thread t1([this](){this -> m_music.playmusic();});
-            t1.detach();
-            std::cout << "Continue? (Y/N, Default Y) " ;
-            std::cin >> ans;
-            if(ans == 'N') {
-                std::cout << "OK, Bye. \\(^ - ^)/" << std::endl;
-                break;
-            }
-            if(ans == 'Y') continue;
-            {
-                continue;
-            }
-            std::cout << "Bad guy." << std::endl;
+            std::thread t1([this](){this -> m_music.run();});
+            t1.join();
+            std::cout << "Continue? " ;
+            if(utils::getInstance().isYOrN()) continue;
+            std::cout << MSG_SAY_GOODBYE << std::endl;
+            utils::getInstance().clearCurrentLine(strlen(MSG_SAY_GOODBYE));
             exit(1);
         }while(true);
     }

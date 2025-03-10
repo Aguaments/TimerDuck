@@ -3,6 +3,7 @@
 #include <thread>
 #include <cmath>
 #include <mutex>
+#include <iomanip>
 
 #define POINT_NUM 3
 #define BASE_INTERVAL 1000
@@ -10,14 +11,14 @@
 namespace ducktimer {
 
     std::unique_ptr<utils> utils::instance = nullptr;
-    std::mutex utils::mtx;
-    int utils::m_point_num = POINT_NUM;
+    std::recursive_mutex utils::mtx;
 
+    // Get singlton
     utils& utils::getInstance() {
-        std::lock_guard<std::mutex> lock(mtx);
+        std::lock_guard<std::recursive_mutex> lock(mtx);
         if(instance == nullptr) {
             auto new_instance = new utils();
-            std::lock_guard<std::mutex> innerlock(mtx);
+            std::lock_guard<std::recursive_mutex> innerlock(mtx);
             if(!instance) {
                 instance.reset(new_instance);
             }
@@ -25,7 +26,7 @@ namespace ducktimer {
         return *instance;
     }
 
-
+    // Clear current line
     void utils::clearCurrentLine(int len) {
         int t = BASE_INTERVAL;
         while(len > 0) {
@@ -36,6 +37,7 @@ namespace ducktimer {
         }
     }
 
+    // Point print module
     void utils::printPoint() {
         for(int i = 0; i < m_point_num; ++ i) {
             std::cout << ".";
@@ -49,5 +51,31 @@ namespace ducktimer {
 
     void utils::setPointNums(const int &nums) {
         m_point_num = nums;
+    }
+
+    // Choose Yes or No
+    int utils::isYOrN(){
+        int ret = 0;
+        char ans = 'Y'; // Default setting
+        std::cout << "Choose Y or N(Yes/No, Default Y) " ;
+        if((std::cin >> ans).good()){
+            if(ans == 'N' || ans == 'n') {
+                std::cout << "Set success." << std::endl;
+                ret = 1;
+            }
+            else if(ans == 'Y' || ans == 'y'){
+                std::cout << "Set fail, you choose no.";
+            }
+            else{
+                std::cout << "/(= _ =)\\ DAMN!" << std::endl;
+            }
+        }
+        else{
+            auto curr_time = std::chrono::system_clock::now();
+            std::time_t now_time = std::chrono::system_clock::to_time_t(curr_time);
+            std::tm * local_time = std::localtime(&now_time);
+            std::cerr << "[" << std::put_time(local_time, "%Y-%m-%d %H:%M:%S") << "] Input content error." << std::endl;
+        }
+        return ret;
     }
 }

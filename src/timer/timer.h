@@ -6,15 +6,17 @@
 namespace ducktimer {
     class timer {
     public:
-        explicit timer(int dur, std::string fname):duration(dur), m(fname){};
+        explicit timer(int dur, std::string fname):m_duration(dur), m_music(fname){};
         void run() const;
     private:
         void panel() const;
         void setDuration() const;
         void startDuration() const;
         void startTimer() const;
-        int mutable duration;
-        music m;
+
+    private:
+        int mutable m_duration;
+        music m_music;
     };
 }
 #endif

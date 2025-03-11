@@ -16,3 +16,10 @@ Deaktop timer with a duck image.
     - <font color="#661188"><strong>Action 1: </strong>shake ass</font>
     - <font color="#661188"><strong>Action 2: </strong>angry(touch many times)</font>
     - <font color="#661188"><strong>Action 3: </strong>cry(over two hours)</font>
+
+# Complie
+1. use cmake to complie the project.
+
+# Usage
+1. choose a music and rename to "test1.cpp".
+2. put the music to the "/bin" directory

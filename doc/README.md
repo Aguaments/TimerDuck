@@ -21,5 +21,5 @@ Deaktop timer with a duck image.
 1. use cmake to complie the project.
 
 # Usage
-1. choose a music and rename to "test1.cpp".
+1. choose a music and rename to "test1.mp3".
 2. put the music to the "/bin" directory

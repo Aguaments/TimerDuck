@@ -14,7 +14,7 @@
 - queue
 
 
-## <atomic>标准库
+## \<atomic\>标准库
 - atomic类型
   包裹了一种类型，可以保证不会造成数据竞争，可以用于在不同线程之间同步内存访问
 - atomic_flag类型
@@ -31,3 +31,13 @@
     4. memory_order_release
     5. memory_order_acq_rel
     6. memory_order_seq_cst: 顺序一致性
+## shared_ptr | unique_ptr
+- 直接使用构造函数创建只能指针和make_shared有什么不同？
+  ```C++
+  // 直接使用
+  std::shared_ptr<int> p(new int(100));
+
+  // 使用make_shared
+  auto p = std::make_shared<int>(100);
+  ```
+  直接使用构造函数会进行两次内存分配，一个是原始对象的内存分配，另一个是内部计数器的内存分配，而使用make_shared只需要一次内存分配

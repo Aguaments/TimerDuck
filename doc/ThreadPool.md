@@ -12,3 +12,22 @@
 - mutex
 - condition_variable
 - queue
+
+
+## <atomic>标准库
+- atomic类型
+  包裹了一种类型，可以保证不会造成数据竞争，可以用于在不同线程之间同步内存访问
+- atomic_flag类型
+  - boolean atomic类型，所有库实现中唯一保证了无锁并发（lock-free）的类型，可以设置为ATOMIC_FLAG_INIT
+  - 函数：
+    1. test_and_set: 将flag置位
+    2. clear：将flag清除
+- load()函数
+  - 返回atomic对象包含的类型所对应的值，该函数可以遵循指定的内存序
+  - 内存序：
+    1. memory_order_relaxed
+    2. memory_order_consume
+    3. memory_order_acquire
+    4. memory_order_release
+    5. memory_order_acq_rel
+    6. memory_order_seq_cst: 顺序一致性

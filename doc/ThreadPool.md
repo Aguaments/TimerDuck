@@ -41,19 +41,19 @@
   auto p = std::make_shared<int>(100);
   ```
   直接使用构造函数会进行两次内存分配，一个是原始对象的内存分配，另一个是内部计数器的内存分配，而使用make_shared只需要一次内存分配
-## \<condition_variable>\标准库
+## \<condition_variable\>标准库
 - condition_variable：能够阻塞调用的线程，直到被通知重新开始。调用wait函数之前，使用unique_lock去锁定线程。线程会保持阻塞状态，直到其他线程在同一个condition_variable调用notification函数。（使用condition_variable之前一定要先用一下unique_lock）
 - 函数：
   1. wait
   2. wait_for
-## \<thread>\标准库
+## \<thread\>标准库
 多线程共享相同的地址空间。thread在构造完成后，就已经开始执行线程。
   - 函数：
     1. join：join函数会阻塞当前调用的函数，并等待线程执行完毕后的返回结果。（保证同步的机制）
     2. detach：让子线程独立执行，主线程不必等待
     3. get_id：返回当前线程的唯一标识符
     4. hardware_concurrency：返回硬件核心数，支持的线程并行数量
-## \<future>\标准库
+## \<future\>标准库
 - promise：promise对象存储某种类型的值，这个值可以被future对象取回（可以在其他线程中），这个promise本身提供了一个同步点。promise对象关联了一个shared status，通过调用get_future可以将shared status关联到一个future对象。
   - 调用get_future后，promise对象和future对象可以共享相同的shared status
     1. primise：异步provider，给shared status设置值的

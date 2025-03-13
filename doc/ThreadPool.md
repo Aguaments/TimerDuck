@@ -46,3 +46,21 @@
 - 函数：
   1. wait
   2. wait_for
+## \<thread>\标准库
+多线程共享相同的地址空间。thread在构造完成后，就已经开始执行线程。
+  - 函数：
+    1. join：join函数会阻塞当前调用的函数，并等待线程执行完毕后的返回结果。（保证同步的机制）
+    2. detach：让子线程独立执行，主线程不必等待
+    3. get_id：返回当前线程的唯一标识符
+    4. hardware_concurrency：返回硬件核心数，支持的线程并行数量
+## \<future>\标准库
+- promise：promise对象存储某种类型的值，这个值可以被future对象取回（可以在其他线程中），这个promise本身提供了一个同步点。promise对象关联了一个shared status，通过调用get_future可以将shared status关联到一个future对象。
+  - 调用get_future后，promise对象和future对象可以共享相同的shared status
+    1. primise：异步provider，给shared status设置值的
+    2. future：异步返回对象，从shared status中取值的
+  - 函数：
+    1. set_value：给promise包裹的类型赋值
+    2. get_future：返回与shared status相关的future对象
+- future：可以从provider或者function中取回值，在不同的线程中正确的同步访问。
+  - 函数：
+    1. get：等待获取promise中包裹类型对应的值

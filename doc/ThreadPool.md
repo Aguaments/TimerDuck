@@ -41,3 +41,8 @@
   auto p = std::make_shared<int>(100);
   ```
   直接使用构造函数会进行两次内存分配，一个是原始对象的内存分配，另一个是内部计数器的内存分配，而使用make_shared只需要一次内存分配
+## \<condition_variable>\标准库
+- condition_variable：能够阻塞调用的线程，直到被通知重新开始。调用wait函数之前，使用unique_lock去锁定线程。线程会保持阻塞状态，直到其他线程在同一个condition_variable调用notification函数。（使用condition_variable之前一定要先用一下unique_lock）
+- 函数：
+  1. wait
+  2. wait_for

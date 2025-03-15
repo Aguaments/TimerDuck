@@ -3,7 +3,6 @@
 .build/
 build/
 bins
-doc
 bin
 gens
 libs

@@ -11,7 +11,6 @@
 
 
 namespace ducktimer{
-
     std::atomic<bool> music::running = true;
 
     void music::mointerKeyboard() const {

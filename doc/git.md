@@ -74,3 +74,16 @@ git checkout dev(分支名) # 切换到dev分支
 git switch dev(分支名)
 git merge dev(分支名) # 将dev分支合并到当前所在的分支
 ```
+
+## 合并冲突
+手动处理冲突文件
+
+## rebase命令
+git rebase <需要合并到的目标分支>
+不会增加额外的提交记录，形成线性的历史，干净直观
+
+# 注
+## origin
+这个时远程仓库的一个别名
+一般使用git clone的时候如下
+git push origin <分支名>

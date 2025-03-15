@@ -69,6 +69,8 @@ git pull <远程仓库名> <远程分支名>:<本地分支名>
 ## git branch
 ```sh
 git branch dev(分支名) # 创建dev分支
+git branch -d dev(分支名) # 删除分支（已经被合并的分支，没有被合并的分支要使用-D来删除）
 git checkout dev(分支名) # 切换到dev分支
 git switch dev(分支名)
+git merge dev(分支名) # 将dev分支合并到当前所在的分支
 ```

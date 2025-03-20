@@ -75,8 +75,11 @@ namespace ducktimer {
             m_music.run();
             std::cout << "Continue? " ;
             if(utils::getInstance().isYOrN()) continue;
-            std::cout << MSG_SAY_GOODBYE << std::endl;
-            utils::getInstance().clearCurrentLine(strlen(MSG_SAY_GOODBYE));
+            else{
+                std::cout << MSG_SAY_GOODBYE << std::endl;
+                utils::getInstance().clearCurrentLine(strlen(MSG_SAY_GOODBYE));
+                break;
+            }
         }while(true);
     }
 }
